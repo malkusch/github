@@ -19,12 +19,6 @@ on:
       MAVEN_GPG_PRIVATE:
         required: true
         
-  workflow_dispatch:
-    inputs:
-      dry-run:
-        type: boolean
-        default: true
-
 env:
   MAVEN_SERVER_ID: ${{ inputs.MAVEN_SERVER_ID }}
   MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
