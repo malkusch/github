@@ -1,0 +1,84 @@
+name: Maven Central Release
+on:
+  workflow_call:
+    inputs:
+      dry-run:
+        type: boolean
+        default: true
+      JDK:
+        type: string
+        default: 16
+      MAVEN_SERVER_ID:
+        type: string
+        required: true
+    secrets:
+      MAVEN_USERNAME:
+        required: true
+      MAVEN_PASSWORD:
+        required: true
+      MAVEN_GPG_PRIVATE:
+        required: true
+        
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+        default: true
+
+env:
+  MAVEN_SERVER_ID: ${{ inputs.MAVEN_SERVER_ID }}
+  MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+  MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+  RELEASE_ARGS:  -DdryRun=${{ inputs.dry-run  }} -Darguments="-DskipTests -Dgpg.passphrase=" 
+
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: git config --global user.email "${{ github.actor }}@github.com"
+      - run: git config --global user.name "${{ github.actor }}"
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.JDK }}
+          distribution: 'adopt'
+          cache: maven
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
+      - name: Prepare
+        run: mvn --batch-mode release:prepare ${{ env.RELEASE_ARGS }} -DpushChanges=false
+      - name: Push
+        run: git push
+      - run: git push --tags
+      - name: Save target
+        uses: actions/upload-artifact@v3
+        with:
+          name: prepare
+          path: |
+            target
+            release.properties
+          retention-days: 1
+
+  release:
+    needs: [prepare]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.JDK }}
+          distribution: 'adopt'
+          cache: maven
+          server-id: ${{ inputs.MAVEN_SERVER_ID }}
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
+      - name: Restore target
+        uses: actions/download-artifact@v3
+        with:
+            name: prepare
+      - name: Release    
+        if: ${{ ! inputs.dry-run }}
+        run: mvn --batch-mode release:perform -DconnectionUrl=scm:git:${{ github.server_url }}/${{ github.repository }} ${{ env.RELEASE_ARGS }}
