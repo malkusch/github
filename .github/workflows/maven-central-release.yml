@@ -5,9 +5,12 @@ on:
       dry-run:
         type: boolean
         default: true
-      JDK:
+      JDK_VERSION:
         type: string
         default: 16
+      JDK_DISTRIBUTION:
+        type: string
+        default: temurin
       MAVEN_SERVER_ID:
         type: string
     secrets:
@@ -34,8 +37,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ inputs.JDK }}
-          distribution: 'adopt'
+          java-version: ${{ inputs.JDK_VERSION }}
+          distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
       - name: Prepare
@@ -63,8 +66,8 @@ jobs:
         name: Setup MAVEN_SERVER_ID
         if: ${{ ! env.MAVEN_SERVER_ID }}
         with:
-          java-version: ${{ inputs.JDK }}
-          distribution: 'adopt'
+          java-version: ${{ inputs.JDK_VERSION }}
+          distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
       - if: ${{ ! env.MAVEN_SERVER_ID }}
         run: |
@@ -74,8 +77,8 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ inputs.JDK }}
-          distribution: 'adopt'
+          java-version: ${{ inputs.JDK_VERSION }}
+          distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
           server-id: ${{ env.MAVEN_SERVER_ID }}
           server-username: MAVEN_USERNAME
