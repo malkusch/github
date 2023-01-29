@@ -66,18 +66,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
-        name: Setup MAVEN_SERVER_ID
+        name: Setup JDK
         if: ${{ ! env.MAVEN_SERVER_ID }}
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
-      - if: ${{ ! env.MAVEN_SERVER_ID }}
+      - name: Get MAVEN_SERVER_ID
+        if: ${{ ! env.MAVEN_SERVER_ID }}
         run: |
           MAVEN_SERVER_ID=$(mvn help:evaluate -Dexpression=project.distributionManagement.repository.id -q -DforceStdout)
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID"
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID" >> $GITHUB_ENV
-      - name: Setup JDK
+      - name: Setup JDK (with MAVEN_SERVER_ID)
         uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.JDK_VERSION }}
