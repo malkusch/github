@@ -32,8 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: git config --global user.email "${{ github.actor }}@github.com"
-      - run: git config --global user.name "${{ github.actor }}"
+      - name: Setup git
+        run: |
+          git config --global user.email "${{ github.actor }}@github.com"
+          git config --global user.name "${{ github.actor }}"
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
@@ -41,11 +43,12 @@ jobs:
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
-      - name: Prepare
+      - name: mvn release:prepare
         run: mvn --batch-mode release:prepare ${{ env.RELEASE_ARGS }} -DpushChanges=false
       - name: Push
-        run: git push
-      - run: git push --tags
+        run: |
+          git push
+          git push --tags
       - name: Save target
         uses: actions/upload-artifact@v3
         with:
@@ -55,7 +58,7 @@ jobs:
             release.properties
           retention-days: 1
 
-  release:
+  perform:
     needs: [prepare]
     runs-on: ubuntu-latest
     env:
@@ -88,6 +91,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
             name: prepare
-      - name: Release    
+      - name: mvn release:perform
         if: ${{ ! inputs.dry-run }}
         run: mvn --batch-mode release:perform -DconnectionUrl=scm:git:${{ github.server_url }}/${{ github.repository }} ${{ env.RELEASE_ARGS }}
