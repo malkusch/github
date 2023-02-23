@@ -8,6 +8,9 @@ on:
       JDK_DISTRIBUTION:
         type: string
         default: temurin
+      BUILD_TARGETS:
+        type: string
+        default: package
     outputs:
       jar:
         value: ${{ jobs.build.outputs.jar }}
@@ -26,7 +29,7 @@ jobs:
         distribution: ${{ inputs.JDK_DISTRIBUTION }}
         cache: maven
     - name: Build jar
-      run: mvn --batch-mode --update-snapshots clean package -Dmaven.test.skip
+      run: mvn --batch-mode --update-snapshots clean ${{ inputs.BUILD_TARGETS }} -Dmaven.test.skip
     - name: Set JAR_NAME
       run: |
         JAR_NAME=$(mvn help:evaluate -Dexpression=project.build.finalName -q -DforceStdout).jar
