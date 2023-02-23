@@ -1,0 +1,26 @@
+name: Release at Github
+on:
+  workflow_call:
+    inputs:
+      FILE:
+        type: string
+        required: true
+        
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start
+        run: echo Releasing ${{ inputs.FILE }}
+      - name: Load File
+        uses: actions/download-artifact@v3
+        with:
+            name: ${{ inputs.FILE }}
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: ${{ inputs.FILE }}
+            asset_name: ${{ inputs.FILE }}
+            tag: ${{ github.ref }}-snapshot
+            overwrite: true
