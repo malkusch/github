@@ -11,6 +11,9 @@ on:
       BUILD_TARGETS:
         type: string
         default: package
+      ALLOW_PRIVILEGED_PORT:
+        type: number
+        required: false
     outputs:
       jar:
         value: ${{ jobs.build.outputs.jar }}
@@ -68,6 +71,9 @@ jobs:
         with:
             name: target
             path: target
+      - name: Allow privileged port
+        if: ${{ inputs.ALLOW_PRIVILEGED_PORT }}
+        run: sudo sysctl net.ipv4.ip_unprivileged_port_start=${{ inputs.ALLOW_PRIVILEGED_PORT }}
       - name: Test
         run: mvn --batch-mode test
 
@@ -91,5 +97,8 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
             secrets: ${{ toJSON(secrets) }}
+      - name: Allow privileged port
+        if: ${{ inputs.ALLOW_PRIVILEGED_PORT }}
+        run: sudo sysctl net.ipv4.ip_unprivileged_port_start=${{ inputs.ALLOW_PRIVILEGED_PORT }}
       - name: Test
         run: mvn --batch-mode failsafe:integration-test failsafe:verify -Dskip.surefire.tests
