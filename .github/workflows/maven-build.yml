@@ -1,7 +1,6 @@
 name: Build
 on:
   workflow_call:
-    secrets: inherit
     inputs:
       JDK_VERSION:
         type: string
