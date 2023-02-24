@@ -4,7 +4,7 @@ on:
     inputs:
       JDK_VERSION:
         type: string
-        default: 16
+        required: false
       JDK_DISTRIBUTION:
         type: string
         default: temurin
@@ -15,12 +15,47 @@ on:
         type: number
         required: false
     outputs:
+      JDK_VERSION:
+        value: ${{ jobs.jdk_version.outputs.JDK_VERSION }}
       jar:
         value: ${{ jobs.build.outputs.jar }}
 
 jobs:
+  jdk_version:
+    env:
+      JDK_VERSION: ${{ inputs.JDK_VERSION }}
+    outputs:
+      JDK_VERSION: ${{ steps.result.outputs.JDK_VERSION }}
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ ! env.JDK_VERSION }}
+        uses: actions/checkout@v3
+        
+      - if: ${{ ! env.JDK_VERSION }}
+        id: Detect
+        uses: YunaBraska/java-info-action@main
+        with:
+          jv-fallback: 1
+        
+      - if: ${{ ! env.JDK_VERSION }}
+        name: Detected
+        run: echo "JDK_VERSION=${{ steps.detect.outputs.java_version }}" >> $GITHUB_ENV
+        
+      - if: ${{ ! env.JDK_VERSION || env.JDK_VERSION <= 5 }}
+        name: Not Detected
+        run: |
+          echo "::error file={name},line={line},endLine={endLine},title={title}::Could not detect JDK (was $JDK_VERSION)"
+          exit 1
+    
+      - id: result
+        name: Result ${{ env.JDK_VERSION }}
+        run: echo "JDK_VERSION=$JDK_VERSION" >> $GITHUB_OUTPUT
+        
   build:
     runs-on: ubuntu-latest
+    needs: [jdk_version]
+    env:
+      JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     outputs:
       jar: ${{ steps.setJar.outputs.jar }}
     steps:
@@ -28,7 +63,7 @@ jobs:
     - name: Set up JDK 
       uses: actions/setup-java@v3
       with:
-        java-version: ${{ inputs.JDK_VERSION }}
+        java-version: ${{ env.JDK_VERSION }}
         distribution: ${{ inputs.JDK_DISTRIBUTION }}
         cache: maven
     - name: Build jar
@@ -57,13 +92,15 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build, jdk_version]
+    env:
+      JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ inputs.JDK_VERSION }}
+          java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
       - name: Restore target
@@ -79,13 +116,15 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build, jdk_version]
+    env:
+      JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: ${{ inputs.JDK_VERSION }}
+          java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
       - name: Restore target
