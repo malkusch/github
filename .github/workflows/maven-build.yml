@@ -33,7 +33,7 @@ jobs:
         
       - if: ${{ ! env.JDK_VERSION }}
         id: Detect
-        uses: YunaBraska/java-info-action@2.0.0
+        uses: YunaBraska/java-info-action@1.13.2
         with:
           jv-fallback: 1
         
