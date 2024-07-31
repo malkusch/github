@@ -28,13 +28,13 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup git
         run: |
           git config --global user.email "${{ github.actor }}@github.com"
           git config --global user.name "${{ github.actor }}"
       - name: Setup JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -47,7 +47,7 @@ jobs:
           git push
           git push --tags
       - name: Save target
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: prepare
           path: |
@@ -63,8 +63,8 @@ jobs:
       MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         name: Setup JDK
         if: ${{ ! env.MAVEN_SERVER_ID }}
         with:
@@ -78,7 +78,7 @@ jobs:
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID"
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID" >> $GITHUB_ENV
       - name: Setup Maven Central
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -87,7 +87,7 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
       - name: Restore target
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: prepare
       - name: mvn release:perform

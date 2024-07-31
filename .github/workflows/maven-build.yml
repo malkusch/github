@@ -29,11 +29,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - if: ${{ ! env.JDK_VERSION }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - if: ${{ ! env.JDK_VERSION }}
         id: Detect
-        uses: YunaBraska/java-info-action@1.5.40
+        uses: YunaBraska/java-info-action@2.0.0
         with:
           jv-fallback: 1
         
@@ -59,9 +59,9 @@ jobs:
     outputs:
       jar: ${{ steps.setJar.outputs.jar }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: ${{ env.JDK_VERSION }}
         distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -74,7 +74,7 @@ jobs:
         echo "JAR_NAME=$JAR_NAME"
         echo "JAR_NAME=$JAR_NAME" >> $GITHUB_ENV
     - name: Save jar
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.JAR_NAME }}
         path: target/${{ env.JAR_NAME }}
@@ -84,7 +84,7 @@ jobs:
     - name: Build Tests
       run: mvn --batch-mode test -DskipTests=true
     - name: Save target
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: target
         path: target
@@ -96,15 +96,15 @@ jobs:
     env:
       JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
       - name: Restore target
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: target
             path: target
@@ -120,20 +120,20 @@ jobs:
     env:
       JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
           cache: maven
       - name: Restore target
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: target
             path: target
       - name: Set Environment variables
-        uses: oNaiPs/secrets-to-env-action@v1
+        uses: oNaiPs/secrets-to-env-action@v1.5
         with:
             secrets: ${{ toJSON(secrets) }}
       - name: Allow privileged port

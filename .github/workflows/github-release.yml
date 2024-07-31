@@ -13,7 +13,7 @@ jobs:
       - name: Start
         run: echo Releasing ${{ inputs.FILE }}
       - name: Load File
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             name: ${{ inputs.FILE }}
       - name: Release
