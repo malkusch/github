@@ -95,7 +95,7 @@ jobs:
     - id: setJar
       run: echo "jar=$JAR_NAME" >> $GITHUB_OUTPUT
     - name: Build Tests
-      run: mvn --batch-mode test -DskipTests=true
+      run: mvn --batch-mode test-compile
     - name: Save target
       uses: actions/upload-artifact@v4
       with:
