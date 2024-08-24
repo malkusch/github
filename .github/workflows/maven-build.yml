@@ -142,6 +142,8 @@ jobs:
         with:
           check_name: Unit Tests
           fail_if_no_tests: true
+          fail_on_test_failures: true
+          file_name_in_stack_trace: true
 
   integration-tests:
     if: ${{ inputs.INTEGRATION_TESTS_ENABLED }}
@@ -180,3 +182,5 @@ jobs:
         with:
           check_name: Integration Tests
           fail_if_no_tests: true
+          fail_on_test_failures: true
+          file_name_in_stack_trace: true
