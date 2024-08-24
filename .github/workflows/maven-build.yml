@@ -14,11 +14,18 @@ on:
       ALLOW_PRIVILEGED_PORT:
         type: number
         required: false
+      WORKING_DIRECTORY:
+        type: string
+        default: .
+        required: false
     outputs:
       JDK_VERSION:
         value: ${{ jobs.jdk_version.outputs.JDK_VERSION }}
       jar:
         value: ${{ jobs.build.outputs.jar }}
+
+env:
+  TARGET_PATH: ${{ inputs.WORKING_DIRECTORY }}/target
 
 jobs:
   jdk_version:
@@ -27,15 +34,18 @@ jobs:
     outputs:
       JDK_VERSION: ${{ steps.result.outputs.JDK_VERSION }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
       - if: ${{ ! env.JDK_VERSION }}
         uses: actions/checkout@v4
-        
       - if: ${{ ! env.JDK_VERSION }}
         id: Detect
         uses: YunaBraska/java-info-action@1.5.40
         with:
           jv-fallback: 1
+          work-dir: ${{ inputs.WORKING_DIRECTORY }}
         
       - if: ${{ ! env.JDK_VERSION }}
         name: Detected
@@ -58,6 +68,9 @@ jobs:
       JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
     outputs:
       jar: ${{ steps.setJar.outputs.jar }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 
@@ -77,7 +90,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.JAR_NAME }}
-        path: target/${{ env.JAR_NAME }}
+        path: ${{ env.TARGET_PATH }}/${{ env.JAR_NAME }}
         retention-days: 1
     - id: setJar
       run: echo "jar=$JAR_NAME" >> $GITHUB_OUTPUT
@@ -87,7 +100,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: target
-        path: target
+        path: ${{ env.TARGET_PATH }}
         retention-days: 1
 
   unit-tests:
@@ -95,6 +108,9 @@ jobs:
     needs: [build, jdk_version]
     env:
       JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -107,7 +123,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
             name: target
-            path: target
+            path: ${{ env.TARGET_PATH }}
       - name: Allow privileged port
         if: ${{ inputs.ALLOW_PRIVILEGED_PORT }}
         run: sudo sysctl net.ipv4.ip_unprivileged_port_start=${{ inputs.ALLOW_PRIVILEGED_PORT }}
@@ -119,6 +135,9 @@ jobs:
     needs: [build, jdk_version]
     env:
       JDK_VERSION: ${{ needs.jdk_version.outputs.JDK_VERSION }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -131,7 +150,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
             name: target
-            path: target
+            path: ${{ env.TARGET_PATH }}
       - name: Set Environment variables
         uses: oNaiPs/secrets-to-env-action@v1.5
         with:
