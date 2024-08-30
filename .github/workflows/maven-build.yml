@@ -118,6 +118,9 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+    permissions:
+      checks: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -154,6 +157,9 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
+    permissions:
+      checks: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
