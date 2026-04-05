@@ -31,13 +31,13 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - name: Setup git
         run: |
           git config --global user.email "${{ github.actor }}@github.com"
           git config --global user.name "${{ github.actor }}"
       - name: Setup JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@1d018f9b8b9b505bb578a83b230fabcce01af93b
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -50,7 +50,7 @@ jobs:
           git push
           git push --tags
       - name: Save target
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
           name: prepare
           path: |
@@ -66,8 +66,8 @@ jobs:
       MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+      - uses: actions/setup-java@1d018f9b8b9b505bb578a83b230fabcce01af93b
         name: Setup JDK
         if: ${{ ! env.MAVEN_SERVER_ID }}
         with:
@@ -81,7 +81,7 @@ jobs:
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID"
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID" >> $GITHUB_ENV
       - name: Setup Maven Central
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@1d018f9b8b9b505bb578a83b230fabcce01af93b
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -90,7 +90,7 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE }}
       - name: Restore target
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
         with:
             name: prepare
       - name: mvn release:perform
