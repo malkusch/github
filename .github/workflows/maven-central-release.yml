@@ -46,6 +46,7 @@ jobs:
       - name: mvn release:prepare
         run: mvn --batch-mode release:prepare ${{ env.RELEASE_ARGS }} -DpushChanges=false ${{ inputs.PREPARE_ARGUMENTS }}
       - name: Push
+        if: ${{ ! inputs.dry-run }}
         run: |
           git push
           git push --tags
