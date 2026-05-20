@@ -31,7 +31,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+      - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
       - name: Setup git
         run: |
           git config --global user.email "${{ github.actor }}@github.com"
@@ -67,7 +67,7 @@ jobs:
       MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
     steps:
-      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+      - uses: actions/checkout@900f2210b1d28bbbd0bd22d17926b9e224e8f231
       - uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
         name: Setup JDK
         if: ${{ ! env.MAVEN_SERVER_ID }}
