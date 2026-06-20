@@ -37,7 +37,7 @@ jobs:
           git config --global user.email "${{ github.actor }}@github.com"
           git config --global user.name "${{ github.actor }}"
       - name: Setup JDK
-        uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
+        uses: actions/setup-java@baa1691374336073bf9d31ab4c3ee6399dc3dcf3
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -68,7 +68,7 @@ jobs:
       MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
+      - uses: actions/setup-java@baa1691374336073bf9d31ab4c3ee6399dc3dcf3
         name: Setup JDK
         if: ${{ ! env.MAVEN_SERVER_ID }}
         with:
@@ -82,7 +82,7 @@ jobs:
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID"
           echo "MAVEN_SERVER_ID=$MAVEN_SERVER_ID" >> $GITHUB_ENV
       - name: Setup Maven Central
-        uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
+        uses: actions/setup-java@baa1691374336073bf9d31ab4c3ee6399dc3dcf3
         with:
           java-version: ${{ inputs.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
