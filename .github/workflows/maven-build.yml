@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - if: ${{ ! env.JDK_VERSION }}
         id: Detect
-        uses: YunaBraska/java-info-action@06acbcb53e1e6234536ce18519dcd5d24a7e5fbe
+        uses: YunaBraska/java-info-action@3de3f48ad9cc9d20e8cbcb0105f25aa92e8cdffe
         with:
           jv-fallback: 1
           work-dir: ${{ inputs.WORKING_DIRECTORY }}
