@@ -45,7 +45,7 @@ jobs:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
       - if: ${{ ! env.JDK_VERSION }}
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - if: ${{ ! env.JDK_VERSION }}
         id: Detect
         uses: YunaBraska/java-info-action@06acbcb53e1e6234536ce18519dcd5d24a7e5fbe
@@ -78,7 +78,7 @@ jobs:
       run:
         working-directory: ${{ inputs.WORKING_DIRECTORY }}
     steps:
-    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
     - name: Set up JDK 
       uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
       with:
@@ -122,7 +122,7 @@ jobs:
       checks: write
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up JDK
         uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
         with:
@@ -161,7 +161,7 @@ jobs:
       checks: write
       contents: read
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up JDK
         uses: actions/setup-java@b622de1dfa918ecc0ab28f40cd42e3c3752cd6c5
         with:
