@@ -80,7 +80,7 @@ jobs:
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
     - name: Set up JDK 
-      uses: actions/setup-java@e9339ddc843e9dbd34bf59acac2d761ea4cf6bcd
+      uses: actions/setup-java@733efaeaca653493004ffb895a11b2c6c316558e
       with:
         java-version: ${{ env.JDK_VERSION }}
         distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -124,7 +124,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up JDK
-        uses: actions/setup-java@e9339ddc843e9dbd34bf59acac2d761ea4cf6bcd
+        uses: actions/setup-java@733efaeaca653493004ffb895a11b2c6c316558e
         with:
           java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
@@ -163,7 +163,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Set up JDK
-        uses: actions/setup-java@e9339ddc843e9dbd34bf59acac2d761ea4cf6bcd
+        uses: actions/setup-java@733efaeaca653493004ffb895a11b2c6c316558e
         with:
           java-version: ${{ env.JDK_VERSION }}
           distribution: ${{ inputs.JDK_DISTRIBUTION }}
