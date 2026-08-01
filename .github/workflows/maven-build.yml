@@ -141,7 +141,7 @@ jobs:
         run: mvn --batch-mode test
       - name: Publish Test Report
         if: always()
-        uses: scacap/action-surefire-report@3dacff26879cd2a7f2160d101254032a3707fe6f
+        uses: scacap/action-surefire-report@c38a2d74b9840ae8950a4387ae02b637421d0f39
         with:
           check_name: Unit Tests
           fail_if_no_tests: true
@@ -184,7 +184,7 @@ jobs:
         run: mvn --batch-mode failsafe:integration-test failsafe:verify -Dskip.surefire.tests
       - name: Publish Test Report
         if: always()
-        uses: scacap/action-surefire-report@3dacff26879cd2a7f2160d101254032a3707fe6f
+        uses: scacap/action-surefire-report@c38a2d74b9840ae8950a4387ae02b637421d0f39
         with:
           check_name: Integration Tests
           fail_if_no_tests: true
