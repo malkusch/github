@@ -174,7 +174,7 @@ jobs:
             name: target
             path: ${{ env.TARGET_PATH }}
       - name: Set Environment variables
-        uses: oNaiPs/secrets-to-env-action@01f91495da110d5e3e64b1b01f1b38cb28fb0f42
+        uses: oNaiPs/secrets-to-env-action@e3b3ddb2ded697cedb0fd6ed0aeaea7fd528b5e9
         with:
             secrets: ${{ toJSON(secrets) }}
       - name: Allow privileged port
